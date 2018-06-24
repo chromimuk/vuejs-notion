@@ -1,0 +1,132 @@
+html,
+body {
+    font-family: "Segoe UI", Helvetica, Arial;
+    color: #333;
+    height: 100%;
+    margin: 0;
+    min-width: 960px;
+}
+
+.hidden { display: none; }
+
+#app {
+    height: 100%;
+}
+
+.sidebar {
+    background: rgba(0, 0, 0, 0) linear-gradient(rgb(251, 250, 248), rgb(250, 249, 246) 70px, rgb(249, 247, 243)) repeat scroll 0% 0%;
+    width: 16.666%;
+    float: left;
+    padding: 5px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.sidebar .app-title {
+    margin: 5px;
+    font-size: 24px;
+    font-weight: 700;
+    height: 60px;
+    text-align: center;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
+.sidebar .sidebar-pages {
+    margin-bottom: 10px;
+}
+
+.sidebar .sidebar-page {
+    margin-bottom: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar .sidebar-buttonAddPage {
+    width: 100%;
+}
+
+
+.header {
+    width: 83.333%;
+    float: left;
+    height: 60px;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.userArea {
+    width: 50%;
+    box-sizing: border-box;
+    float: left;
+}
+
+.titlebar {
+
+
+    float: left;
+    width: 50%;
+}
+
+.titlebar .page-title {
+    font-size: 32px;
+    border: none;
+}
+
+.editorAndPreview {
+    width: 83.333%;
+    height: calc(100% - 60px);
+    float: left;
+}
+
+.editorbar {
+    width: 50%;
+    float: left;
+    padding: 15px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.editorbarWithFocus {
+    width: 70%;
+}
+.editorbarWithoutFocus {
+    width: 30%;
+}
+
+.editorbar .editor {
+    height: 85%;
+    border: none;
+    resize: none;
+    outline: none;
+    background-color: #f6f6f6;
+    font-size: 14px;
+    font-family: 'Monaco', courier, monospace;
+    padding: 10px;
+    width: 95%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.previewbar {
+    width: 50%;
+    float: left;
+    padding: 15px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.previewbarWithFocus {
+    width: 70%;
+}
+.previewbarWithoutFocus {
+    width: 30%;
+}
+
+.preview {
+    height: 85%;
+    overflow: scroll;
+    overflow-x: hidden;
+}

@@ -1,0 +1,54 @@
+.preview h1 {
+    width: 100%;
+    color: rgb(34, 34, 34);
+    font-weight: 700;
+    letter-spacing: -0.003em;
+    line-height: 1.1;
+    margin-bottom: 0.25em;
+    font-size: 2.375em;
+}
+
+.preview h2 {
+    width: 100%;
+    color: rgb(34, 34, 34);
+    margin-top: 1.5em;
+    margin-bottom: 4px;
+    font-weight: 600;
+    font-size: 1.5em;
+    line-height: 1.2;
+    letter-spacing: -0.002em;
+    padding: 3px 2px;
+    color: rgb(66, 66, 65);
+}
+
+.preview h3 {
+    width: 100%;
+    font-weight: 600;
+    font-size: 1.2em;
+    letter-spacing: -0.002em;
+    line-height: 1.2;
+    padding: 3px 2px;
+    color: rgb(66, 66, 65);
+    margin-top: 1.5em;
+    margin-bottom: 1px;
+}
+
+.preview hr {
+    width: 100%;
+    color: rgb(228, 227, 226);
+}
+
+.preview li {
+    margin-bottom: 7px;
+}
+
+.preview img {
+    width: 100%;
+}
+
+.preview pre {
+    background: #f5f5f5;
+    padding: 15px;
+    box-sizing: border-box;
+    margin-right: 15px;
+}
