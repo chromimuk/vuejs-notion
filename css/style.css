@@ -47,13 +47,14 @@ body {
     overflow: hidden;
 }
 
-.sidebar .sidebar-buttonAddPage {
+.sidebar input[type="button"] {
     width: 100%;
 }
 
-.sidebar .sidebar-buttonDisconnect {
-    width: 100%;
+.sidebar input {
+    margin-bottom: 5px;
 }
+
 
 
 .header {
@@ -62,9 +63,6 @@ body {
     height: 60px;
     padding: 10px;
     box-sizing: border-box;
-
-    /* tmp */
-    /* background-color: #333; */
 }
 
 .userArea {
@@ -74,9 +72,6 @@ body {
     text-align: right;
     height: 42px;
     padding: 10px 0;
-
-    /* tmp */
-    /* background-color: #aaa; */
 }
 
 .titlebar {

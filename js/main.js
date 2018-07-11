@@ -21,7 +21,7 @@ function App() {
     }
 
     function load(user, isFake) {
-        
+
         var g_PageRepo = FirebasePageReference();
         g_PageRepo.init();
 
@@ -44,6 +44,7 @@ function App() {
                 pages: {
                     source: g_PageRepo.getReference(),
                     readyCallback: function () {
+                        console.log(this.pages.length);
                         if (this.pages.length > 0) {
                             this.showContent(this.pages[0]);
                             this.setFocusOnPreview();
@@ -61,6 +62,7 @@ function App() {
             methods: {
 
                 addPage: function () {
+
                     if (this.isNotLoggedIn === true)
                         return;
 
@@ -74,11 +76,12 @@ function App() {
                 },
 
                 savePage: function (page) {
+
                     if (this.isNotLoggedIn === true)
                         return;
-
                     if (this.pageTitle.length === 0)
                         this.pageTitle = this._defaultPageTitle();
+
                     var newValues = {
                         title: this.pageTitle,
                         text: this.editorContent
@@ -88,6 +91,7 @@ function App() {
                 },
 
                 removePage: function (page) {
+
                     if (this.isNotLoggedIn === true)
                         return;
 
@@ -138,5 +142,7 @@ function App() {
         });
     }
 
-    return { init: init };
+    return {
+        init: init
+    };
 }
