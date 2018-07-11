@@ -27,12 +27,26 @@
     <div id="app">
         <div class="sidebar">
             <div class="app-title">Notion</div>
+
+            <div class="sidebar-userArea">
+                <div id="userArea-login" class="hidden">
+                    <input type="text" placeholder="Courriel" v-model="userEmail" />
+                    <input type="password" placeholder="Mot de passe" v-model="userPassword" />
+                    <input type="button" value="Connexion" v-on:click="login" />
+                </div>
+
+                <div id="userArea-loggedAs" class="hidden">
+                    <div>{{ userEmail }}</div>
+                    <input type="button" value="Déconnection"  class="sidebar-buttonDisconnect" v-on:click="logout" />
+                </div>
+            </div>
+
             <div class="sidebar-pages">
                 <div v-for="page in pages" class="sidebar-page" :key="page['.key']">
                     <span v-on:click="showContent(page)">{{page.title}}</span>
                 </div>
+                <button id="btnAddPage" class="sidebar-buttonAddPage" v-on:click="addPage">Nouvelle page</button>
             </div>
-            <button id="btnAddPage" class="sidebar-buttonAddPage" v-on:click="addPage">Nouvelle page</button>
         </div>
 
         <div class="header">
@@ -41,31 +55,19 @@
             </div>
 
             <div class="userArea">
-                <div id="userArea-login" class="hidden">
-                    <input type="text" placeholder="Courriel" v-model="userEmail" />
-                    <input type="password" placeholder="Mot de passe"  v-model="userPassword" />
-                    <input type="button" value="Connexion" v-on:click="login"></button>
-                </div>
-
-                <div id="userArea-loggedAs" class="hidden">
-                    <span>{{ userEmail }}</span>
-                    <input type="button" value="Déconnection" v-on:click="logout"></button>
-                </div>
+                <span class="alert">{{ alertMessage }}</span>
+                <button id="btnSavePage" v-on:click="savePage(currentPage)">Sauvegarder</button>
+                <button id="btnRemovePage" v-on:click="removePage(currentPage)">Supprimer</button>
             </div>
         </div>
 
         <div class="editorAndPreview">
             <div class="editorbar">
                 <textarea class="editor" :value="editorContent" @input="updatePreview" v-on:click="setFocusOnEditor()"></textarea>
-                <br/>
-                <button id="btnSavePage" v-on:click="savePage(currentPage)">Sauvegarder</button>
-                <button id="btnRemovePage" v-on:click="removePage(currentPage)">Supprimer</button>
             </div>
 
             <div class="previewbar">
                 <div class="preview" v-html="compiledMarkdown" v-on:click="setFocusOnPreview()"></div>
-                <br/>
-                <div class="alert">{{ alertMessage }}</div>
             </div>
         </div>
 
