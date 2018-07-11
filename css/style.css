@@ -17,23 +17,25 @@ body {
     background: rgba(0, 0, 0, 0) linear-gradient(rgb(251, 250, 248), rgb(250, 249, 246) 70px, rgb(249, 247, 243)) repeat scroll 0% 0%;
     width: 16.666%;
     float: left;
-    padding: 5px;
     box-sizing: border-box;
     height: 100%;
 }
 
 .sidebar .app-title {
-    margin: 5px;
     font-size: 24px;
     font-weight: 700;
     height: 60px;
     text-align: center;
-    padding-top: 10px;
+    padding-top: 13px;
     box-sizing: border-box;
+
+    /* tmp */
+    /* background-color: #444; */
 }
 
 .sidebar .sidebar-pages {
     margin-bottom: 10px;
+    padding: 5px;
 }
 
 .sidebar .sidebar-page {
@@ -52,19 +54,26 @@ body {
     width: 83.333%;
     float: left;
     height: 60px;
-    padding: 15px;
+    padding: 10px;
     box-sizing: border-box;
+
+    /* tmp */
+    /* background-color: #333; */
 }
 
 .userArea {
     width: 50%;
     box-sizing: border-box;
     float: left;
+    text-align: right;
+    height: 42px;
+    padding: 10px 0;
+
+    /* tmp */
+    /* background-color: #aaa; */
 }
 
 .titlebar {
-
-
     float: left;
     width: 50%;
 }
@@ -72,6 +81,7 @@ body {
 .titlebar .page-title {
     font-size: 32px;
     border: none;
+    width: 100%;
 }
 
 .editorAndPreview {
