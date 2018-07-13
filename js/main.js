@@ -2,25 +2,27 @@ App().init();
 
 function App() {
 
+    var isInitialized = false;
     var g_RenderingHelper = RenderingHelper();
     var g_FirebaseHelper = FirebaseHelper();
 
     function init() {
-
         g_FirebaseHelper.init();
-
         firebase.auth().onAuthStateChanged(firebaseUser => {
-            if (firebaseUser) {
-                g_RenderingHelper.showLoggedInState();
-                load(firebaseUser, false);
-            } else {
-                g_RenderingHelper.showLoggedOutState();
-                load({ email: '' }, true);
+            if (isInitialized === false)
+            {
+                if (firebaseUser) {
+                    load(firebaseUser, true);
+                    isInitialized = true;
+                } else {
+                    load({ email: '' }, false);
+                    isInitialized = true;
+                }
             }
         });
     }
 
-    function load(user, isFake) {
+    function load(user, isLoggedIn) {
 
         var g_PageRepo = FirebasePageReference();
         g_PageRepo.init();
@@ -34,17 +36,17 @@ function App() {
                 },
                 pageTitle: '',
                 editorContent: '',
+                alertMessage: '',
+
                 user: user,
                 userEmail: user.email,
                 userPassword: '',
-                alertMessage: '',
-                isNotLoggedIn: isFake
+                isLoggedIn: isLoggedIn
             },
             firebase: {
                 pages: {
                     source: g_PageRepo.getReference(),
                     readyCallback: function () {
-                        console.log(this.pages.length);
                         if (this.pages.length > 0) {
                             this.showContent(this.pages[0]);
                             this.setFocusOnPreview();
@@ -63,7 +65,7 @@ function App() {
 
                 addPage: function () {
 
-                    if (this.isNotLoggedIn === true)
+                    if (this.isLoggedIn === false)
                         return;
 
                     this.editorContent = this._defaultPageContent();
@@ -77,7 +79,7 @@ function App() {
 
                 savePage: function (page) {
 
-                    if (this.isNotLoggedIn === true)
+                    if (this.isLoggedIn === false)
                         return;
                     if (this.pageTitle.length === 0)
                         this.pageTitle = this._defaultPageTitle();
@@ -92,7 +94,7 @@ function App() {
 
                 removePage: function (page) {
 
-                    if (this.isNotLoggedIn === true)
+                    if (this.isLoggedIn === false)
                         return;
 
                     g_PageRepo.remove(page['.key']);
@@ -117,14 +119,30 @@ function App() {
                 },
 
                 login: function () {
-                    g_FirebaseHelper.signIn(this.userEmail, this.userPassword);
+                    var instance = this;
+                    var promise = g_FirebaseHelper.signIn(this.userEmail, this.userPassword);
+                    promise.then(function(firebaseUser) {
+                        instance.isLoggedIn = true; 
+                    });
+                    promise.catch(function(error) {
+                        instance.isLoggedIn = false;
+                        instance.addAlert(error.message);
+                    });
                 },
 
                 logout: function () {
-                    g_FirebaseHelper.signOut();
+                    var instance = this;
+                    var promise = g_FirebaseHelper.signOut();
+                    promise.then(function() {
+                        instance.isLoggedIn = false; 
+                    });
+                    promise.catch(function(error) {
+                        instance.addAlert(error.message);
+                    });
                 },
 
                 addAlert: function (text) {
+                    console.log(text)
                     this.alertMessage = text;
                 },
 

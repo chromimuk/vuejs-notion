@@ -1,33 +1,5 @@
 function RenderingHelper() {
 
-    function showLoggedInState() {
-        document.getElementById("userArea-login").classList.add("hidden");
-        document.getElementById("userArea-loggedAs").classList.remove("hidden");
-
-        document.getElementsByClassName("sidebar-pages")[0].classList.remove("hidden");
-        document.getElementById("btnAddPage").classList.remove("hidden");
-        document.getElementById("btnSavePage").classList.remove("hidden");
-        document.getElementById("btnRemovePage").classList.remove("hidden");
-
-        document.getElementsByClassName("page-title")[0].classList.remove("hidden");
-        document.getElementsByClassName("alert")[0].classList.remove("hidden");
-        document.getElementsByClassName("editorAndPreview")[0].classList.remove("hidden");
-    }
-
-    function showLoggedOutState() {
-        document.getElementById("userArea-login").classList.remove("hidden");
-        document.getElementById("userArea-loggedAs").classList.add("hidden");
-
-        document.getElementsByClassName("sidebar-pages")[0].classList.add("hidden");
-        document.getElementById("btnAddPage").classList.add("hidden");
-        document.getElementById("btnSavePage").classList.add("hidden");
-        document.getElementById("btnRemovePage").classList.add("hidden");
-
-        document.getElementsByClassName("page-title")[0].classList.add("hidden");
-        document.getElementsByClassName("alert")[0].classList.add("hidden");
-        document.getElementsByClassName("editorAndPreview")[0].classList.add("hidden");
-    }
-
     function renderPreview(editorContent) {
         var html = marked(editorContent, {
             sanitize: true
@@ -67,8 +39,6 @@ function RenderingHelper() {
 
     return {
         renderPreview: renderPreview,
-        showLoggedInState: showLoggedInState,
-        showLoggedOutState: showLoggedOutState,
         setFocus: setFocus
     }
 }

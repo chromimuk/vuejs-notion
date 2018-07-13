@@ -23,13 +23,11 @@ function FirebaseHelper() {
     }
 
     function signIn(email, password) {
-        var promise = firebase.auth().signInWithEmailAndPassword(email, password);
-        promise.catch(e => console.error(e.message));
+        return firebase.auth().signInWithEmailAndPassword(email, password);
     }
 
     function signOut() {
-        var promise = firebase.auth().signOut();
-        promise.catch(e => console.error(e.message));
+        return firebase.auth().signOut();
     }
 
 
