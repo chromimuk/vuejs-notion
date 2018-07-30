@@ -71,6 +71,15 @@
             </div>
 
             <div class="menubar" v-bind:class="{ hidden: !isMenuShown }">
+                
+                <div id="menubarLastEdited" class="menubarLastEdited">
+                    Dernière modification
+                    <br> 
+                    <span id="menubarLastEditedUser">{{ pageLastEditedUser }}</span>
+                    <br>
+                    <span id="menubarLastEditedDate" v-html="pageLastEditedDateComputed"></span>
+                </div>
+
                 <button id="btnRemovePage" class="pageMenuButton" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="removePage(currentPage)">Supprimer</button>
             </div>
         </div>

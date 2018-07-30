@@ -58,7 +58,9 @@ function FirebasePageReference() {
         var newItem = {
             id: newRef.key,
             title: page.title,
-            text: page.text
+            text: page.text,
+            date: page.date,
+            user: page.user
         };
         newRef.set(newItem);
         return newRef.key;
@@ -67,7 +69,9 @@ function FirebasePageReference() {
     function save(pageKey, newValues) {
         _ref.child(pageKey).update({
             title: newValues.title,
-            text: newValues.text
+            text: newValues.text,
+            date: newValues.date,
+            user: newValues.user
         });
     }
 

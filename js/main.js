@@ -36,6 +36,9 @@ function App() {
                     text: '',
                 },
                 pageTitle: '',
+                pageLastEditedUser: '',
+                pageLastEditedDate: '',
+
                 editorContent: '',
                 alertMessage: '',
 
@@ -61,6 +64,12 @@ function App() {
             computed: {
                 compiledMarkdown: function () {
                     return g_RenderingHelper.renderPreview(this.editorContent);
+                },
+                pageLastEditedDateComputed: function () {
+                    if (this.pageLastEditedDate.length === 0)
+                        return null;
+                    else
+                        return new Date(this.pageLastEditedDate).toLocaleDateString('fr-FR')
                 }
             },
 
@@ -76,12 +85,13 @@ function App() {
                     this.currentPage = {
                         title: this.pageTitle,
                         text: this.editorContent,
+                        date: new Date(),
+                        user: this.userEmail
                     };
                     this.currentPage['.key'] = g_PageRepo.add(this.currentPage);
                 },
 
                 savePage: function (page) {
-
                     if (this.isLoggedIn === false)
                         return;
                     if (this.pageTitle.length === 0)
@@ -89,7 +99,9 @@ function App() {
 
                     var newValues = {
                         title: this.pageTitle,
-                        text: this.editorContent
+                        text: this.editorContent,
+                        date: new Date(),
+                        user: this.user.email
                     }
                     g_PageRepo.save(page['.key'], newValues);
                     this.addAlert('Sauvegardé le ' + this._defaultPageTitle());
@@ -118,6 +130,8 @@ function App() {
                     this.currentPage = page;
                     this.editorContent = page.text;
                     this.pageTitle = page.title;
+                    this.pageLastEditedUser = page.user;
+                    this.pageLastEditedDate = page.date;
                 },
 
                 updatePreview: _.debounce(function (e) {
