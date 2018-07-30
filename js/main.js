@@ -9,13 +9,14 @@ function App() {
     function init() {
         g_FirebaseHelper.init();
         firebase.auth().onAuthStateChanged(firebaseUser => {
-            if (isInitialized === false)
-            {
+            if (isInitialized === false) {
                 if (firebaseUser) {
                     load(firebaseUser, true);
                     isInitialized = true;
                 } else {
-                    load({ email: '' }, false);
+                    load({
+                        email: ''
+                    }, false);
                     isInitialized = true;
                 }
             }
@@ -41,7 +42,9 @@ function App() {
                 user: user,
                 userEmail: user.email,
                 userPassword: '',
-                isLoggedIn: isLoggedIn
+
+                isLoggedIn: isLoggedIn,
+                isMenuShown: false
             },
             firebase: {
                 pages: {
@@ -93,11 +96,22 @@ function App() {
                 },
 
                 removePage: function (page) {
-
                     if (this.isLoggedIn === false)
                         return;
 
                     g_PageRepo.remove(page['.key']);
+                },
+
+                showPageMenu: function (page) {
+                    if (this.isLoggedIn === false)
+                        return;
+
+                    this.isMenuShown = !this.isMenuShown;
+                    if (this.isMenuShown === true) {
+                        g_RenderingHelper.setFocus(FocusType.Menu);
+                    } else {
+                        g_RenderingHelper.setFocus(FocusType.Preview);
+                    }
                 },
 
                 showContent: function (page) {
@@ -111,20 +125,22 @@ function App() {
                 }, 300),
 
                 setFocusOnEditor: function (element) {
-                    g_RenderingHelper.setFocus(false);
+                    this.isMenuShown = false;
+                    g_RenderingHelper.setFocus(FocusType.Editor);
                 },
 
                 setFocusOnPreview: function (element) {
-                    g_RenderingHelper.setFocus(true);
+                    this.isMenuShown = false;
+                    g_RenderingHelper.setFocus(FocusType.Preview);
                 },
 
                 login: function () {
                     var instance = this;
                     var promise = g_FirebaseHelper.signIn(this.userEmail, this.userPassword);
-                    promise.then(function(firebaseUser) {
-                        instance.isLoggedIn = true; 
+                    promise.then(function (firebaseUser) {
+                        instance.isLoggedIn = true;
                     });
-                    promise.catch(function(error) {
+                    promise.catch(function (error) {
                         instance.isLoggedIn = false;
                         instance.addAlert(error.message);
                     });
@@ -133,16 +149,15 @@ function App() {
                 logout: function () {
                     var instance = this;
                     var promise = g_FirebaseHelper.signOut();
-                    promise.then(function() {
-                        instance.isLoggedIn = false; 
+                    promise.then(function () {
+                        instance.isLoggedIn = false;
                     });
-                    promise.catch(function(error) {
+                    promise.catch(function (error) {
                         instance.addAlert(error.message);
                     });
                 },
 
                 addAlert: function (text) {
-                    console.log(text)
                     this.alertMessage = text;
                 },
 
@@ -155,7 +170,6 @@ function App() {
                     var date = new Date();
                     return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
                 },
-
             }
         });
     }

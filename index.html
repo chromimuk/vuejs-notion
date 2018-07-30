@@ -57,7 +57,7 @@
             <div class="userArea">
                 <span class="alert">{{ alertMessage }}</span>
                 <button id="btnSavePage" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="savePage(currentPage)">Sauvegarder</button>
-                <button id="btnRemovePage" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="removePage(currentPage)">Supprimer</button>
+                <button id="btnPageMenu" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="showPageMenu(currentPage)">...</button>
             </div>
         </div>
 
@@ -68,6 +68,10 @@
 
             <div class="previewbar">
                 <div class="preview" v-html="compiledMarkdown" v-on:click="setFocusOnPreview()"></div>
+            </div>
+
+            <div class="menubar" v-bind:class="{ hidden: !isMenuShown }">
+                <button id="btnRemovePage" class="pageMenuButton" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="removePage(currentPage)">Supprimer</button>
             </div>
         </div>
 

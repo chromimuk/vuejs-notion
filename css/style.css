@@ -105,6 +105,9 @@ body {
 .editorbarWithoutFocus {
     width: 30%;
 }
+.editorbarWithoutFocusMenu {
+    width: 40%;
+}
 
 .editorbar .editor {
     height: 95%;
@@ -135,9 +138,27 @@ body {
 .previewbarWithoutFocus {
     width: 30%;
 }
+.previewbarWithoutFocus {
+    width: 30%;
+}
+.previewbarWithoutFocusMenu {
+    width: 40%;
+}
 
 .preview {
     height: calc(100% - 20px);
     overflow: scroll;
     overflow-x: hidden;
+}
+
+.menubar {
+    width: 20%;
+    float: left;
+    padding: 0 10px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.menubar button {
+    width: 100%;
 }
