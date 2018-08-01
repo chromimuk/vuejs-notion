@@ -1,38 +1,61 @@
-var FocusType = {
+"use strict";
+
+// determine on what the focus is currently on
+const FocusType = {
     Editor: 0,
     Preview: 1,
     Menu: 2
 }
 
+// helper to render elements on the page
 function RenderingHelper() {
 
-    function renderPreview(editorContent) {
-        var html = marked(editorContent, {
-            sanitize: true
-        });
-        return _applyCodeBlockHighlight(html);
+    // singleton setup
+    let _instance;
+    RenderingHelper = function () {
+        return _instance;
     }
+    RenderingHelper.prototype = this;
+    _instance = new RenderingHelper();
+    _instance.constructor = RenderingHelper;
+
+
+    // private
 
     function _applyCodeBlockHighlight(html) {
-        var el = document.createElement('html');
-        el.innerHTML = html;
-        var preBlocks = el.getElementsByTagName('pre');
-        var preBlocksLength = preBlocks.length;
 
-        for (var i = 0; i < preBlocksLength; i++) {
-            var oldBlockHTML = preBlocks[i].children[0].innerHTML.replace(/'/g, '&#39;');
-            var codeBlock = preBlocks[i].children[0];
-            hljs.highlightBlock(codeBlock);
-            html = html.replace(oldBlockHTML, codeBlock.innerHTML);
+        const tmpHTML = document.createElement('html');
+        tmpHTML.innerHTML = html;
+        const preBlocks = tmpHTML.getElementsByTagName('pre');
+        const preBlocksLength = preBlocks.length;
+
+        // highlight each pre block
+        for (let i = 0; i < preBlocksLength; i++) {
+            let preBlockChild = preBlocks[i].children[0];
+            let oldBlockHTML = preBlockChild.innerHTML.replace(/'/g, '&#39;');
+            hljs.highlightBlock(preBlockChild);
+            html = html.replace(oldBlockHTML, preBlockChild.innerHTML);
         }
 
         return html;
     }
 
-    function setFocus(focusType) {
 
-        var editor = document.getElementById('editorDiv');
-        var preview = document.getElementById('previewDiv');
+    // public 
+
+    _instance.renderPreview = function (editorContent) {
+        let html = marked(editorContent, {
+            sanitize: true
+        });
+        return _applyCodeBlockHighlight(html);
+    }
+
+    _instance.setFocus = function (focusType) {
+
+        const editor = document.getElementById('editorDiv');
+        const preview = document.getElementById('previewDiv');
+
+        // meh
 
         if (focusType === FocusType.Preview) {
 
@@ -66,8 +89,5 @@ function RenderingHelper() {
         }
     }
 
-    return {
-        renderPreview: renderPreview,
-        setFocus: setFocus
-    }
+    return _instance;
 }

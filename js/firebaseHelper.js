@@ -1,69 +1,118 @@
+"use strict";
+
+const ObjectType = {
+    Page: 0
+};
+
+
+/// interface to the firebase API
 function FirebaseHelper() {
 
-    function _getConfig() {
-        var config = FirebaseConfig();
-        return config.getConfig();
+    // singleton setup
+    let _instance;
+    FirebaseHelper = function () {
+        return _instance;
+    }
+    FirebaseHelper.prototype = this;
+    _instance = new FirebaseHelper();
+    _instance.constructor = FirebaseHelper;
+
+
+    // private
+
+    const firebaseConfig = FirebaseConfig().getConfig();
+    firebase.initializeApp(firebaseConfig);
+
+    const _FirebasePageReference = new FirebasePageReference();
+
+
+    // public
+
+    _instance.isUserLoggedIn = function (resolve, reject) {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                resolve(user);
+            } else {
+                reject();
+            }
+        });
     }
 
-    function init() {
-        var config = _getConfig();
-        firebase.initializeApp(config);
-    }
-
-    function getUser() {
-        return firebase.auth().currentUser;
-    }
-
-    function getReference(name) {
-        return firebase.database().ref(name);
-    }
-
-    function signIn(email, password) {
+    _instance.signIn = function (email, password) {
         return firebase.auth().signInWithEmailAndPassword(email, password);
-    }
+    };
 
-    function signOut() {
+    _instance.signOut = function () {
         return firebase.auth().signOut();
-    }
+    };
 
+    _instance.getReference = function (objectType) {
+        if (objectType === ObjectType.Page) {
+            return _FirebasePageReference.getReference();
+        }
+    };
 
-    return {
-        init: init,
-        getUser: getUser,
-        getReference: getReference,
-        signIn: signIn,
-        signOut: signOut
-    }
+    _instance.add = function (objectType, obj) {
+        if (objectType === ObjectType.Page) {
+            _FirebasePageReference.add(obj);
+        }
+    };
+
+    _instance.save = function (objectType, id, newValues) {
+        if (objectType === ObjectType.Page) {
+            _FirebasePageReference.save(id, newValues);
+        }
+    };
+
+    _instance.remove = function (objectType, id) {
+        if (objectType === ObjectType.Page) {
+            _FirebasePageReference.remove(id);
+        }
+    };
+
+    return _instance;
 }
 
 
+/// reference to the 'pages' node on Firebase
 function FirebasePageReference() {
 
-    var _ref = null;
-
-    function init() {
-        _ref = firebase.database().ref('pages');
+    // singleton setup
+    let _instance;
+    FirebasePageReference = function () {
+        return _instance;
     }
+    FirebasePageReference.prototype = this;
+    _instance = new FirebasePageReference();
+    _instance.constructor = FirebasePageReference;
 
-    function getReference() {
-        return _ref;
-    }
 
-    function add(page) {
-        var newRef = _ref.push();
-        var newItem = {
-            id: newRef.key,
+    // private
+
+    const _refPages = firebase.database().ref('pages');
+
+
+    // public
+
+    _instance.getReference = function () {
+        return _refPages;
+    };
+
+    _instance.add = function (page) {
+        let newPage = _refPages.push();
+        const newItem = {
+            id: newPage.key,
             title: page.title,
             text: page.text,
             date: page.date,
             user: page.user
         };
-        newRef.set(newItem);
-        return newRef.key;
-    }
+        newPage.set(newItem);
+        return newPage.key;
+    };
 
-    function save(pageKey, newValues) {
-        _ref.child(pageKey).update({
+    _instance.save = function (pageKey, newValues) {
+        _refPages.child(pageKey).update({
             title: newValues.title,
             text: newValues.text,
             date: newValues.date,
@@ -71,15 +120,9 @@ function FirebasePageReference() {
         });
     }
 
-    function remove(pageKey) {
-        _ref.child(pageKey).remove();
+    _instance.remove = function (pageKey) {
+        _refPages.child(pageKey).remove();
     }
 
-    return {
-        init: init,
-        getReference: getReference,
-        add: add,
-        save: save,
-        remove: remove,
-    }
+    return _instance;
 }

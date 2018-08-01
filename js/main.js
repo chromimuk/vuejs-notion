@@ -1,35 +1,54 @@
-App().init();
+"use strict;"
 
-function App() {
+new Notion();
 
-    var isInitialized = false;
-    var g_RenderingHelper = RenderingHelper();
-    var g_FirebaseHelper = FirebaseHelper();
+function Notion() {
 
+    // singleton setup
+    let _instance;
+    Notion = function () {
+        return _instance;
+    }
+    Notion.prototype = this;
+    _instance = new Notion();
+    _instance.constructor = Notion;
+
+
+    // variables
+    let _RenderingHelper;
+    let _FirebaseHelper;
+
+
+    // methods
+
+    // init app, by checking if a user is logged in or not
     function init() {
-        g_FirebaseHelper.init();
-        firebase.auth().onAuthStateChanged(firebaseUser => {
-            if (isInitialized === false) {
-                if (firebaseUser) {
-                    load(firebaseUser, true);
-                    isInitialized = true;
-                } else {
-                    load({
-                        email: ''
-                    }, false);
-                    isInitialized = true;
-                }
-            }
+        _RenderingHelper = new RenderingHelper();
+        _FirebaseHelper = new FirebaseHelper();
+
+        let promise = new Promise(function (resolve, reject) {
+            _FirebaseHelper.isUserLoggedIn(resolve, reject)
         });
+        promise.then(function (firebaseUser) {
+            loadApp(firebaseUser, true);
+        });
+        promise.catch(firebaseUserStatusNoUser);
     }
 
-    function load(user, isLoggedIn) {
+    function firebaseUserStatusNoUser() {
+        const blankUser = {
+            email: ''
+        };
+        loadApp(blankUser, false);
+    }
 
-        var g_PageRepo = FirebasePageReference();
-        g_PageRepo.init();
+    // load the Vue app
+    function loadApp(user, isLoggedIn) {
 
-        var app = new Vue({
+        new Vue({
+
             el: '#app',
+
             data: {
                 currentPage: {
                     title: '',
@@ -49,9 +68,10 @@ function App() {
                 isLoggedIn: isLoggedIn,
                 isMenuShown: false
             },
+
             firebase: {
                 pages: {
-                    source: g_PageRepo.getReference(),
+                    source: _FirebaseHelper.getReference(ObjectType.Page),
                     readyCallback: function () {
                         if (this.pages.length > 0) {
                             this.showContent(this.pages[0]);
@@ -63,7 +83,7 @@ function App() {
 
             computed: {
                 compiledMarkdown: function () {
-                    return g_RenderingHelper.renderPreview(this.editorContent);
+                    return _RenderingHelper.renderPreview(this.editorContent);
                 },
                 pageLastEditedDateComputed: function () {
                     if (this.pageLastEditedDate.length === 0)
@@ -88,7 +108,7 @@ function App() {
                         date: new Date(),
                         user: this.userEmail
                     };
-                    this.currentPage['.key'] = g_PageRepo.add(this.currentPage);
+                    this.currentPage['.key'] = _FirebaseHelper.add(ObjectType.Page, this.currentPage);
                 },
 
                 savePage: function (page) {
@@ -103,7 +123,7 @@ function App() {
                         date: new Date(),
                         user: this.user.email
                     }
-                    g_PageRepo.save(page['.key'], newValues);
+                    _FirebaseHelper.save(ObjectType.Page, page['.key'], newValues);
                     this.addAlert('Sauvegardé le ' + this._defaultPageTitle());
                 },
 
@@ -111,7 +131,7 @@ function App() {
                     if (this.isLoggedIn === false)
                         return;
 
-                    g_PageRepo.remove(page['.key']);
+                    _FirebaseHelper.remove(ObjectType.Page, page['.key']);
                 },
 
                 showPageMenu: function (page) {
@@ -120,9 +140,9 @@ function App() {
 
                     this.isMenuShown = !this.isMenuShown;
                     if (this.isMenuShown === true) {
-                        g_RenderingHelper.setFocus(FocusType.Menu);
+                        _RenderingHelper.setFocus(FocusType.Menu);
                     } else {
-                        g_RenderingHelper.setFocus(FocusType.Preview);
+                        _RenderingHelper.setFocus(FocusType.Preview);
                     }
                 },
 
@@ -140,18 +160,18 @@ function App() {
 
                 setFocusOnEditor: function (element) {
                     this.isMenuShown = false;
-                    g_RenderingHelper.setFocus(FocusType.Editor);
+                    _RenderingHelper.setFocus(FocusType.Editor);
                 },
 
                 setFocusOnPreview: function (element) {
                     this.isMenuShown = false;
-                    g_RenderingHelper.setFocus(FocusType.Preview);
+                    _RenderingHelper.setFocus(FocusType.Preview);
                 },
 
                 login: function () {
-                    var instance = this;
-                    var promise = g_FirebaseHelper.signIn(this.userEmail, this.userPassword);
-                    promise.then(function (firebaseUser) {
+                    let instance = this;
+                    let promise = _FirebaseHelper.signIn(this.userEmail, this.userPassword);
+                    promise.then(function () {
                         instance.isLoggedIn = true;
                     });
                     promise.catch(function (error) {
@@ -161,8 +181,8 @@ function App() {
                 },
 
                 logout: function () {
-                    var instance = this;
-                    var promise = g_FirebaseHelper.signOut();
+                    let instance = this;
+                    let promise = _FirebaseHelper.signOut();
                     promise.then(function () {
                         instance.isLoggedIn = false;
                     });
@@ -177,18 +197,16 @@ function App() {
 
                 // à la création d'une nouvelle page
                 _defaultPageContent: function () {
-                    var date = new Date();
+                    const date = new Date();
                     return '*' + date.toLocaleDateString('fr-FR') + '*\n___';
                 },
                 _defaultPageTitle: function () {
-                    var date = new Date();
+                    const date = new Date();
                     return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
                 },
             }
         });
     }
 
-    return {
-        init: init
-    };
+    init();
 }
