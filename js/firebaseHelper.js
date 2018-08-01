@@ -1,12 +1,8 @@
 function FirebaseHelper() {
 
     function _getConfig() {
-        return {
-            apiKey: "AIzaSyAY8-F8oDEApfw9sgHY_Rl9a3Ykjz_T0Ug",
-            authDomain: "vuejs-university.firebaseapp.com",
-            databaseURL: "https://vuejs-university.firebaseio.com",
-            projectId: "vuejs-university",
-        };
+        var config = FirebaseConfig();
+        return config.getConfig();
     }
 
     function init() {
