@@ -30,29 +30,39 @@ function RenderingHelper() {
     }
 
     function setFocus(focusType) {
-        var editorBar = document.getElementsByClassName('editorbar')[0];
-        var previewBar = document.getElementsByClassName('previewbar')[0];
+
+        var editor = document.getElementById('editorDiv');
+        var preview = document.getElementById('previewDiv');
+
         if (focusType === FocusType.Preview) {
-            editorBar.classList.add("editorbarWithoutFocus");
-            editorBar.classList.remove("editorbarWithFocus");
-            editorBar.classList.remove("editorbarWithoutFocusMenu");
-            previewBar.classList.add("previewbarWithFocus");
-            previewBar.classList.remove("previewbarWithoutFocus");
-            previewBar.classList.remove("previewbarWithoutFocusMenu");
+
+            editor.classList.remove("main--editor-withFocus");
+            editor.classList.add("main--editor-withoutFocus");
+            editor.classList.remove("main--editor-withoutFocus-menuShown");
+
+            preview.classList.add("main--preview-withFocus");
+            preview.classList.remove("main--preview-withoutFocus");
+            preview.classList.remove("main--preview-withoutFocus-menuShown");
+
         } else if (focusType === FocusType.Editor) {
-            editorBar.classList.add("editorbarWithFocus");
-            editorBar.classList.remove("editorbarWithoutFocus");
-            editorBar.classList.remove("editorbarWithoutFocusMenu");
-            previewBar.classList.add("previewbarWithoutFocus");
-            previewBar.classList.remove("previewbarWithFocus");
-            previewBar.classList.remove("previewbarWithoutFocusMenu");
+
+            editor.classList.add("main--editor-withFocus");
+            editor.classList.remove("main--editor-withoutFocus");
+            editor.classList.remove("main--editor-withoutFocus-menuShown");
+
+            preview.classList.remove("main--preview-withFocus");
+            preview.classList.add("main--preview-withoutFocus");
+            preview.classList.remove("main--preview-withoutFocus-menuShown");
+
         } else if (focusType === FocusType.Menu) {
-            editorBar.classList.add("editorbarWithoutFocusMenu");
-            editorBar.classList.remove("editorbarWithFocus");
-            editorBar.classList.remove("editorbarWithoutFocus");
-            previewBar.classList.add("previewbarWithoutFocusMenu");
-            previewBar.classList.remove("previewbarWithFocus");
-            previewBar.classList.remove("previewbarWithoutFocus");
+
+            editor.classList.remove("main--editor-withFocus");
+            editor.classList.add("main--editor-withoutFocus");
+
+            preview.classList.remove("main--preview-withFocus");
+            preview.classList.remove("main--preview-withoutFocus");
+            preview.classList.add("main--preview-withoutFocus-menuShown");
+
         }
     }
 

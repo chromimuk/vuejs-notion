@@ -9,23 +9,37 @@
     <title>Notion</title>
 
     <script src="js/min/external.min.js"></script>
-    <script src="js/min/firebaseHelper.min.js"></script>
-    <script src="js/min/renderingHelper.min.js"></script>
+
+    <!--
+        <script src="js/min/firebaseHelper.min.js"></script>
+        <script src="js/min/renderingHelper.min.js"></script>
+    -->
+    <script src="js/firebaseHelper.js"></script>
+    <script src="js/renderingHelper.js"></script>
 
     <link rel="stylesheet" href="css/min/external/highlightjs-default.min.css">
-    <link rel="stylesheet" href="css/min/style.min.css">
-    <link rel="stylesheet" href="css/min/preview.min.css">
+
+    <!-- 
+        <link rel="stylesheet" href="css/min/style.min.css">
+        <link rel="stylesheet" href="css/min/preview.min.css"> 
+    -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/preview.css"> 
 </head>
 
 <body>
-    <div id="app">
-        <div class="sidebar">
-            <div class="app-title">Notion</div>
+    <div id="app" class="app">
 
-            <div class="sidebar-userArea">
+        <div class="sidebar">
+
+            <div class="sidebar--title">Notion</div>
+
+            <div class="sidebar--userArea">
                 <div id="userArea-login" v-bind:class="{ hidden: isLoggedIn }">
-                    <input type="text" placeholder="Courriel" v-model="userEmail" /><br/>
-                    <input type="password" placeholder="Mot de passe" v-model="userPassword" /><br/>
+                    <input type="text" placeholder="Courriel" v-model="userEmail" />
+                    <br/>
+                    <input type="password" placeholder="Mot de passe" v-model="userPassword" />
+                    <br/>
                     <input type="button" value="Connexion" v-on:click="login" />
                 </div>
 
@@ -35,40 +49,44 @@
                 </div>
             </div>
 
-            <div class="sidebar-pages" v-bind:class="{ hidden: !isLoggedIn }">
-                <div v-for="page in pages" class="sidebar-page" :key="page['.key']">
+            <div class="sidebar--pages" v-bind:class="{ hidden: !isLoggedIn }">
+                <div v-for="page in pages" class="sidebar--pages--page" :key="page['.key']">
                     <span v-on:click="showContent(page)">{{ page.title }}</span>
                 </div>
                 <input type="button" v-bind:class="{ hidden: !isLoggedIn }" id="btnAddPage" v-on:click="addPage" value="Nouvelle page" />
             </div>
+
         </div>
 
+
         <div class="header">
-            <div class="titlebar">
-                <input type="text" v-model="pageTitle" class="page-title" v-bind:class="{ hidden: !isLoggedIn }" />
+            <div class="header--pageTitle">
+                <input type="text" v-model="pageTitle" class="header--pageTitle--input" v-bind:class="{ hidden: !isLoggedIn }" />
             </div>
 
-            <div class="userArea">
-                <span class="alert">{{ alertMessage }}</span>
+            <div class="header--actions">
+                <span class="header--actions--alert">{{ alertMessage }}</span>
                 <button id="btnSavePage" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="savePage(currentPage)">Sauvegarder</button>
                 <button id="btnPageMenu" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="showPageMenu(currentPage)">...</button>
             </div>
         </div>
 
-        <div class="editorAndPreview" v-bind:class="{ hidden: !isLoggedIn }">
-            <div class="editorbar">
-                <textarea class="editor" :value="editorContent" @input="updatePreview" v-on:click="setFocusOnEditor()"></textarea>
+
+        <div class="main" v-bind:class="{ hidden: !isLoggedIn }">
+
+            <div id="editorDiv" class="main--editor">
+                <textarea class="main--editor--textarea" :value="editorContent" @input="updatePreview" v-on:click="setFocusOnEditor()"></textarea>
             </div>
 
-            <div class="previewbar">
-                <div class="preview" v-html="compiledMarkdown" v-on:click="setFocusOnPreview()"></div>
+            <div id="previewDiv" class="main--preview">
+                <div class="main--preview--markdownArea" v-html="compiledMarkdown" v-on:click="setFocusOnPreview()"></div>
             </div>
 
-            <div class="menubar" v-bind:class="{ hidden: !isMenuShown }">
-                
-                <div id="menubarLastEdited" class="menubarLastEdited">
+            <div id="menuDiv" class="main--menu" v-bind:class="{ hidden: !isMenuShown }">
+
+                <div id="menubarLastEdited" class="main--menu--lastEditedDiv">
                     Dernière modification
-                    <br> 
+                    <br>
                     <span id="menubarLastEditedUser">{{ pageLastEditedUser }}</span>
                     <br>
                     <span id="menubarLastEditedDate" v-html="pageLastEditedDateComputed"></span>

@@ -1,4 +1,4 @@
-.preview h1 {
+.main .main--preview .main--preview--markdownArea h1 {
     width: 100%;
     color: rgb(34, 34, 34);
     font-weight: 700;
@@ -8,7 +8,7 @@
     font-size: 2.375em;
 }
 
-.preview h2 {
+.main .main--preview .main--preview--markdownArea  h2 {
     width: 100%;
     color: rgb(34, 34, 34);
     margin-top: 1.5em;
@@ -21,7 +21,7 @@
     color: rgb(66, 66, 65);
 }
 
-.preview h3 {
+.main .main--preview .main--preview--markdownArea  h3 {
     width: 100%;
     font-weight: 600;
     font-size: 1.2em;
@@ -33,20 +33,20 @@
     margin-bottom: 1px;
 }
 
-.preview hr {
+.main .main--preview .main--preview--markdownArea  hr {
     width: 100%;
     color: rgb(228, 227, 226);
 }
 
-.preview li {
+.main .main--preview .main--preview--markdownArea  li {
     margin-bottom: 7px;
 }
 
-.preview img {
+.main .main--preview .main--preview--markdownArea  img {
     width: 100%;
 }
 
-.preview pre {
+.main .main--preview .main--preview--markdownArea  pre {
     background: #f5f5f5;
     padding: 15px;
     box-sizing: border-box;
