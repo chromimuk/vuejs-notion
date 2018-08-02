@@ -1,4 +1,4 @@
-"use strict;"
+"use strict";
 
 class Tool {
     static isUndefinedOrNullOrEmpty(e) {
@@ -7,29 +7,28 @@ class Tool {
 }
 
 class DateHelper {
-    static getTimeString() {
-        const date = new Date();
-        return date.toLocaleTimeString('fr-FR');
+
+    static getTimeString(d) {
+        return DateHelper.toDate(d).toLocaleTimeString('fr-FR');
     }
 
     static getDateString(d) {
+        return DateHelper.toDate(d).toLocaleDateString('fr-FR');
+    }
+
+    static toDate(d) {
         let date;
         if (Tool.isUndefinedOrNullOrEmpty(d) === true) {
             date = new Date();
         } else {
             if (d instanceof Date === false) {
-                date = DateHelper.toDate(d);
+                // TODO: throw error if invalid
+                date = new Date(d);
             } else {
                 date = d;
             }
         }
-
-        return date.toLocaleDateString('fr-FR');
-    }
-
-    static toDate(d) {
-        // TODO: throw error if invalid
-        return new Date(d);
+        return date;
     }
 }
 
