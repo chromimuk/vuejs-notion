@@ -51,13 +51,11 @@ class Page {
     }
 
     static getDefaultTitle() {
-        const date = new Date();
-        return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        return DateHelper.getTimeString();
     }
 
     static getDefaultContent() {
-        const date = new Date();
-        return '*' + date.toLocaleDateString('fr-FR') + '*\n___';
+        return `*${DateHelper.getDateString()}*\n___`;
     }
 
 }

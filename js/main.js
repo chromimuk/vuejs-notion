@@ -86,10 +86,10 @@ function Notion() {
                     return _RenderingHelper.renderPreview(this.editorContent);
                 },
                 pageLastEditedDateComputed: function () {
-                    if (this.isUndefinedOrNullOrEmpty(this.pageLastEditedDate)) {
+                    if (Tool.isUndefinedOrNullOrEmpty(this.pageLastEditedDate)) {
                         return null;
                     } else {
-                        return new Date(this.pageLastEditedDate).toLocaleDateString('fr-FR')
+                        return DateHelper.getDateString(this.pageLastEditedDate);
                     }
                 }
             },
@@ -125,7 +125,7 @@ function Notion() {
                         currentPage._id
                     );
                     _FirebaseHelper.save(ObjectType.Page, page.id, page);
-                    this.addAlert('Sauvegardé le ' + new Date());
+                    this.addAlert(`${Resx.savedAt} ${DateHelper.getTimeString()}`);
                 },
 
                 removePage: function (currentPage) {
@@ -202,10 +202,6 @@ function Notion() {
                 addAlert: function (text) {
                     this.alertMessage = text;
                 },
-
-                isUndefinedOrNullOrEmpty: function (element) {
-                    return (element === undefined || element === null || element.length === 0);
-                }
             }
         });
     }
