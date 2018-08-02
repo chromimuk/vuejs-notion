@@ -86,55 +86,56 @@ function Notion() {
                     return _RenderingHelper.renderPreview(this.editorContent);
                 },
                 pageLastEditedDateComputed: function () {
-                    if (this.pageLastEditedDate.length === 0)
+                    if (this.isUndefinedOrNullOrEmpty(this.pageLastEditedDate)) {
                         return null;
-                    else
+                    } else {
                         return new Date(this.pageLastEditedDate).toLocaleDateString('fr-FR')
+                    }
                 }
             },
 
             methods: {
 
                 addPage: function () {
-
                     if (this.isLoggedIn === false)
                         return;
 
-                    this.editorContent = this._defaultPageContent();
-                    this.pageTitle = this._defaultPageTitle();
-                    this.currentPage = {
-                        title: this.pageTitle,
-                        text: this.editorContent,
-                        date: new Date(),
-                        user: this.userEmail
-                    };
-                    this.currentPage['.key'] = _FirebaseHelper.add(ObjectType.Page, this.currentPage);
+                    this.editorContent = Page.getDefaultContent();
+                    this.pageTitle = Page.getDefaultTitle();
+
+                    const newPage = new Page(
+                        this.pageTitle,
+                        this.editorContent,
+                        this.userEmail,
+                        new Date(),
+                        null // no id yet
+                    );
+                    this.currentPage = _FirebaseHelper.add(ObjectType.Page, newPage);
                 },
 
-                savePage: function (page) {
-                    if (this.isLoggedIn === false)
-                        return;
-                    if (this.pageTitle.length === 0)
-                        this.pageTitle = this._defaultPageTitle();
-
-                    var newValues = {
-                        title: this.pageTitle,
-                        text: this.editorContent,
-                        date: new Date(),
-                        user: this.user.email
-                    }
-                    _FirebaseHelper.save(ObjectType.Page, page['.key'], newValues);
-                    this.addAlert('Sauvegardé le ' + this._defaultPageTitle());
-                },
-
-                removePage: function (page) {
+                savePage: function (currentPage) {
                     if (this.isLoggedIn === false)
                         return;
 
-                    _FirebaseHelper.remove(ObjectType.Page, page['.key']);
+                    const page = new Page(
+                        this.pageTitle,
+                        this.editorContent,
+                        this.userEmail,
+                        new Date(),
+                        currentPage._id
+                    );
+                    _FirebaseHelper.save(ObjectType.Page, page.id, page);
+                    this.addAlert('Sauvegardé le ' + new Date());
                 },
 
-                showPageMenu: function (page) {
+                removePage: function (currentPage) {
+                    if (this.isLoggedIn === false)
+                        return;
+
+                    _FirebaseHelper.remove(ObjectType.Page, currentPage._id);
+                },
+
+                showPageMenu: function (currentPage) {
                     if (this.isLoggedIn === false)
                         return;
 
@@ -146,12 +147,19 @@ function Notion() {
                     }
                 },
 
-                showContent: function (page) {
+                showContent: function (p) {
+                    const page = new Page(
+                        p._title,
+                        p._content,
+                        p._userModifiedBy,
+                        p._dtModified,
+                        p._id
+                    );
                     this.currentPage = page;
-                    this.editorContent = page.text;
-                    this.pageTitle = page.title;
-                    this.pageLastEditedUser = page.user;
-                    this.pageLastEditedDate = page.date;
+                    this.pageTitle = page._title;
+                    this.editorContent = page._content;
+                    this.pageLastEditedUser = page._userModifiedBy;
+                    this.pageLastEditedDate = page._dtModified;
                 },
 
                 updatePreview: _.debounce(function (e) {
@@ -195,15 +203,9 @@ function Notion() {
                     this.alertMessage = text;
                 },
 
-                // à la création d'une nouvelle page
-                _defaultPageContent: function () {
-                    const date = new Date();
-                    return '*' + date.toLocaleDateString('fr-FR') + '*\n___';
-                },
-                _defaultPageTitle: function () {
-                    const date = new Date();
-                    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-                },
+                isUndefinedOrNullOrEmpty: function (element) {
+                    return (element === undefined || element === null || element.length === 0);
+                }
             }
         });
     }

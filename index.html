@@ -12,6 +12,7 @@
     <script src="js/firebaseConfig.js"></script>
     <script src="js/firebaseHelper.js"></script>
     <script src="js/renderingHelper.js"></script>
+    <script src="js/page.js"></script>
 
     <link rel="stylesheet" href="css/min/external.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -42,7 +43,7 @@
 
             <div class="sidebar--pages" v-bind:class="{ hidden: !isLoggedIn }">
                 <div v-for="page in pages" class="sidebar--pages--page" :key="page['.key']">
-                    <span v-on:click="showContent(page)">{{ page.title }}</span>
+                    <span v-on:click="showContent(page)">{{ page._title }}</span>
                 </div>
                 <input type="button" v-bind:class="{ hidden: !isLoggedIn }" id="btnAddPage" v-on:click="addPage" value="Nouvelle page" />
             </div>
@@ -78,7 +79,7 @@
                 <div id="menubarLastEdited" class="main--menu--lastEditedDiv">
                     Dernière modification
                     <br>
-                    <span id="menubarLastEditedUser">{{ pageLastEditedUser }}</span>
+                    <span id="menubarLastEditedUser">{{ pageLastEditedUser || '' }}</span>
                     <br>
                     <span id="menubarLastEditedDate" v-html="pageLastEditedDateComputed"></span>
                 </div>

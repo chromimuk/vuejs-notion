@@ -54,19 +54,19 @@ function FirebaseHelper() {
 
     _instance.add = function (objectType, obj) {
         if (objectType === ObjectType.Page) {
-            _FirebasePageReference.add(obj);
+            return _FirebasePageReference.add(obj);
         }
     };
 
     _instance.save = function (objectType, id, newValues) {
         if (objectType === ObjectType.Page) {
-            _FirebasePageReference.save(id, newValues);
+            return _FirebasePageReference.save(id, newValues);
         }
     };
 
     _instance.remove = function (objectType, id) {
         if (objectType === ObjectType.Page) {
-            _FirebasePageReference.remove(id);
+            return _FirebasePageReference.remove(id);
         }
     };
 
@@ -99,25 +99,26 @@ function FirebasePageReference() {
     };
 
     _instance.add = function (page) {
+        if (page instanceof Page === false)
+            throw new Error(`object is invalid (${page.constructor.name})`);
+
+        // create a blank page on Firebase (to get the ID)
         let newPage = _refPages.push();
-        const newItem = {
-            id: newPage.key,
-            title: page.title,
-            text: page.text,
-            date: page.date,
-            user: page.user
-        };
-        newPage.set(newItem);
-        return newPage.key;
+
+        // create a real firebase page
+        page.id = newPage.key;
+
+        // push the page on Firebase
+        newPage.set(page);
+
+        return page;
     };
 
-    _instance.save = function (pageKey, newValues) {
-        _refPages.child(pageKey).update({
-            title: newValues.title,
-            text: newValues.text,
-            date: newValues.date,
-            user: newValues.user
-        });
+    _instance.save = function (pageKey, page) {
+        if (page instanceof Page === false)
+            throw new Error(`object is invalid (${page.constructor.name})`);
+
+        _refPages.child(pageKey).update(page);
     }
 
     _instance.remove = function (pageKey) {
