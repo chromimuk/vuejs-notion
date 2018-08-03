@@ -37,7 +37,7 @@ function Notion() {
 
     function firebaseUserStatusNoUser() {
         const blankUser = {
-            email: ''
+            email: '', password: ''
         };
         loadApp(blankUser, false);
     }
@@ -50,23 +50,27 @@ function Notion() {
             el: '#app',
 
             data: {
-                currentPage: {
-                    title: '',
-                    text: '',
-                },
-                pageTitle: '',
-                pageLastEditedUser: '',
-                pageLastEditedDate: '',
 
-                editorContent: '',
+                // will be a Page() instance
+                currentPage: {
+                    content: '' // necessary to provide it for init?
+                },
+
+                // error message at login, "last saved at...", etc.
                 alertMessage: '',
 
+                // current (firebase) user
                 user: user,
-                userEmail: user.email,
-                userPassword: '',
 
+                // is the user currently logged in
                 isLoggedIn: isLoggedIn,
-                isMenuShown: false
+
+                // is the page menu currently shown
+                isMenuShown: false,
+
+                // login form
+                email: user.email,
+                password: ''
             },
 
             firebase: {
@@ -83,10 +87,10 @@ function Notion() {
 
             computed: {
                 compiledMarkdown: function () {
-                    return _RenderingHelper.renderPreview(this.editorContent);
+                    return _RenderingHelper.renderPreview(this.currentPage.content);
                 },
                 pageLastEditedDateComputed: function () {
-                    if (Tool.isUndefinedOrNullOrEmpty(this.pageLastEditedDate)) {
+                    if (Tool.isUndefinedOrNullOrEmpty(this.currentPage.dtModified)) {
                         return null;
                     } else {
                         return DateHelper.getDateString(this.pageLastEditedDate);
@@ -100,13 +104,10 @@ function Notion() {
                     if (this.isLoggedIn === false)
                         return;
 
-                    this.editorContent = Page.getDefaultContent();
-                    this.pageTitle = Page.getDefaultTitle();
-
                     const newPage = new Page(
-                        this.pageTitle,
-                        this.editorContent,
-                        this.userEmail,
+                        Page.getDefaultTitle(),
+                        Page.getDefaultContent(),
+                        this.user.email,
                         new Date(),
                         null // no id yet
                     );
@@ -118,9 +119,9 @@ function Notion() {
                         return;
 
                     const page = new Page(
-                        this.pageTitle,
-                        this.editorContent,
-                        this.userEmail,
+                        this.currentPage.title,
+                        this.currentPage.content,
+                        this.user.email,
                         new Date(),
                         currentPage._id
                     );
@@ -156,14 +157,12 @@ function Notion() {
                         p._id
                     );
                     this.currentPage = page;
-                    this.pageTitle = page._title;
-                    this.editorContent = page._content;
-                    this.pageLastEditedUser = page._userModifiedBy;
-                    this.pageLastEditedDate = page._dtModified;
+                    // this.editorContent = page._content;
                 },
 
                 updatePreview: _.debounce(function (e) {
-                    this.editorContent = e.target.value;
+                    // this.editorContent = e.target.value;
+                    this.currentPage.content = e.target.value;
                 }, 300),
 
                 setFocusOnEditor: function (element) {
@@ -177,8 +176,9 @@ function Notion() {
                 },
 
                 login: function () {
+
                     let instance = this;
-                    let promise = _FirebaseHelper.signIn(this.userEmail, this.userPassword);
+                    let promise = _FirebaseHelper.signIn(this.email, this.password);
                     promise.then(function () {
                         instance.isLoggedIn = true;
                     });

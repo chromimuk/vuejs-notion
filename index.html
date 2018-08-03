@@ -29,24 +29,24 @@
 
             <div class="sidebar--userArea">
                 <div id="userArea-login" v-bind:class="{ hidden: isLoggedIn }">
-                    <input type="text" placeholder="Courriel" v-model="userEmail" />
+                    <input type="text" placeholder="Courriel" v-model="email" />
                     <br/>
-                    <input type="password" placeholder="Mot de passe" v-model="userPassword" />
+                    <input type="password" placeholder="Mot de passe" v-model="password" />
                     <br/>
                     <input type="button" value="Connexion" v-on:click="login" />
                 </div>
 
                 <div id="userArea-loggedAs" v-bind:class="{ hidden: !isLoggedIn }">
-                    <div>{{ userEmail }}</div>
-                    <input type="button" value="Déconnection" v-on:click="logout" />
+                    <div v-cloak>{{ user.email }}</div>
+                    <input type="button" value="Déconnection" v-on:click="logout" v-cloak />
                 </div>
             </div>
 
             <div class="sidebar--pages" v-bind:class="{ hidden: !isLoggedIn }">
                 <div v-for="page in pages" class="sidebar--pages--page" :key="page['.key']">
-                    <span v-on:click="showContent(page)">{{ page._title }}</span>
+                    <span v-on:click="showContent(page)" v-cloak>{{ page._title }}</span>
                 </div>
-                <input type="button" v-bind:class="{ hidden: !isLoggedIn }" id="btnAddPage" v-on:click="addPage" value="Nouvelle page" />
+                <input type="button" v-bind:class="{ hidden: !isLoggedIn }" id="btnAddPage" v-on:click="addPage" value="Nouvelle page" v-cloak />
             </div>
 
         </div>
@@ -54,11 +54,11 @@
 
         <div class="header">
             <div class="header--pageTitle">
-                <input type="text" v-model="pageTitle" class="header--pageTitle--input" v-bind:class="{ hidden: !isLoggedIn }" />
+                <input type="text" v-model="currentPage.title" class="header--pageTitle--input" v-bind:class="{ hidden: !isLoggedIn }" />
             </div>
 
             <div class="header--actions">
-                <span class="header--actions--alert">{{ alertMessage }}</span>
+                <span class="header--actions--alert" v-cloak>{{ alertMessage }}</span>
                 <button id="btnSavePage" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="savePage(currentPage)">Sauvegarder</button>
                 <button id="btnPageMenu" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="showPageMenu(currentPage)">...</button>
             </div>
@@ -68,7 +68,7 @@
         <div class="main" v-bind:class="{ hidden: !isLoggedIn }">
 
             <div id="editorDiv" class="main--editor">
-                <textarea class="main--editor--textarea" :value="editorContent" @input="updatePreview" v-on:click="setFocusOnEditor()"></textarea>
+                <textarea class="main--editor--textarea" :value="currentPage.content" @input="updatePreview" v-on:click="setFocusOnEditor()"></textarea>
             </div>
 
             <div id="previewDiv" class="main--preview">
@@ -80,7 +80,7 @@
                 <div id="menubarLastEdited" class="main--menu--lastEditedDiv">
                     Dernière modification
                     <br>
-                    <span id="menubarLastEditedUser">{{ pageLastEditedUser || '' }}</span>
+                    <span id="menubarLastEditedUser">{{ currentPage.userModifiedBy || '' }}</span>
                     <br>
                     <span id="menubarLastEditedDate" v-html="pageLastEditedDateComputed"></span>
                 </div>
