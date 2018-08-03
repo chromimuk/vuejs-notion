@@ -7,14 +7,17 @@ body {
     min-width: 920px;
 }
 
-.hidden { display: none; }
+.hidden {
+    display: none;
+}
 
 .app {
     height: 100%;
 }
 
-[v-cloak] { display: none; }
-
+[v-cloak] {
+    display: none;
+}
 
 /* sidebar */
 
@@ -33,7 +36,6 @@ body {
 .sidebar input {
     margin-bottom: 5px;
 }
-
 
 .sidebar .sidebar--title {
     font-size: 24px;
@@ -60,8 +62,6 @@ body {
     white-space: nowrap;
     overflow: hidden;
 }
-
-
 
 /* header */
 
@@ -93,8 +93,6 @@ body {
     width: 100%;
 }
 
-
-
 /* main */
 
 .main {
@@ -103,7 +101,6 @@ body {
     float: left;
 }
 
-
 .main .main--editor {
     width: 50%;
     float: left;
@@ -111,13 +108,14 @@ body {
     box-sizing: border-box;
     height: 100%;
 }
+
 .main .main--editor-withFocus {
     width: 70%;
 }
+
 .main .main--editor-withoutFocus {
     width: 30%;
 }
-
 
 .main .main--editor .main--editor--textarea {
     height: 95%;
@@ -134,7 +132,6 @@ body {
     margin-right: auto;
 }
 
-
 .main .main--preview {
     width: 50%;
     float: left;
@@ -146,9 +143,11 @@ body {
 .main .main--preview-withFocus {
     width: 70%;
 }
+
 .main .main--preview-withoutFocus {
     width: 30%;
 }
+
 .main .main--preview-withoutFocus-menuShown {
     width: 50%;
 }
@@ -174,4 +173,39 @@ body {
 .main .main--menu .main--menu--lastEditedDiv {
     font-size: 14px;
     margin-bottom: 5px;
+}
+
+/* quick changes so it becomes readable on a phone screen */
+
+@media only screen and (max-width: 375px) {
+    html,
+    body {
+        height: auto;
+        min-width: 100px;
+    }
+    .main {
+        width: 70%;
+    }
+    .header {
+        width: 70%;
+    }
+    .sidebar {
+        width: 30%;
+    }
+    .main--editor {
+        display: none;
+    }
+    .main--preview {
+        width: 100%;
+    }
+    .header--pageTitle {
+        width: 100%;
+    }
+    .header--actions {
+        display: none;
+    }
+
+    .sidebar .sidebar--pages .sidebar--pages--page {
+        margin-bottom: 20px;
+    }
 }
