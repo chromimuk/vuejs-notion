@@ -25,6 +25,8 @@ function RenderingHelper() {
     // private
 
     let onlyEditorIsShown = true;
+    let isInFullFocus = false;
+
 
     function _applyCodeBlockHighlight(html) {
 
@@ -49,7 +51,8 @@ function RenderingHelper() {
             `main--${elementName}-withFocus`,
             `main--${elementName}-withoutFocus`,
             `main--${elementName}-withoutFocus-menuShown`,
-            `main--${elementName}-full`
+            `main--${elementName}-full`,
+            `hidden`
         ];
         
         for (let c of focusClasses)
@@ -71,6 +74,13 @@ function RenderingHelper() {
 
     _instance.setFocus = function (focusType) {
 
+        // early exit in case we're in "full focus mode"
+        const isFocusType = focusType === FocusType.FullPreview || focusType === FocusType.FullEditor || focusType === FocusType.Menu;
+        if (isInFullFocus === true && isFocusType === false)
+        {
+            return;
+        }
+        
         const editor = document.getElementById('editorDiv');
         const preview = document.getElementById('previewDiv');
 
@@ -80,20 +90,23 @@ function RenderingHelper() {
         if (focusType === FocusType.Preview) {
             editor.classList.add("main--editor-withoutFocus");
             preview.classList.add("main--preview-withFocus");
+            isInFullFocus = false;
         } else if (focusType === FocusType.Editor) {
             editor.classList.add("main--editor-withFocus");
             preview.classList.add("main--preview-withoutFocus");
+            isInFullFocus = false;
         } else if (focusType === FocusType.Menu) {
             editor.classList.add("main--editor-withoutFocus");
             preview.classList.add("main--preview-withoutFocus-menuShown");
+            isInFullFocus = false;
         } else if (focusType === FocusType.FullPreview) {
             preview.classList.add("main--preview-full");
-            preview.classList.remove('hidden');
             editor.classList.add('hidden');
+            isInFullFocus = true;
         } else if (focusType === FocusType.FullEditor) {
             editor.classList.add("main--editor-full");
-            editor.classList.remove('hidden');
             preview.classList.add('hidden');
+            isInFullFocus = true;
         } 
     }
 
@@ -104,12 +117,12 @@ function RenderingHelper() {
         if (onlyEditorIsShown === true)
         {
             this.setFocus(FocusType.FullPreview);
-            btnSwitchView.innerText  = Resx.showEditor;
+            btnSwitchView.innerText = Resx.showEditor;
         }
         else
         {
             this.setFocus(FocusType.FullEditor);
-            btnSwitchView.innerText  = Resx.showPreview;
+            btnSwitchView.innerText = Resx.showPreview;
         }
 
         onlyEditorIsShown = !onlyEditorIsShown;
