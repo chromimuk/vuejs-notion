@@ -109,6 +109,10 @@ body {
     height: 100%;
 }
 
+.main .main--editor-full {
+    width: 100%;
+}
+
 .main .main--editor-withFocus {
     width: 70%;
 }
@@ -138,6 +142,10 @@ body {
     padding: 0 10px;
     box-sizing: border-box;
     height: 100%;
+}
+
+.main .main--preview-full {
+    width: 100%;
 }
 
 .main .main--preview-withFocus {
@@ -173,39 +181,4 @@ body {
 .main .main--menu .main--menu--lastEditedDiv {
     font-size: 14px;
     margin-bottom: 5px;
-}
-
-/* quick changes so it becomes readable on a phone screen */
-
-@media only screen and (max-width: 375px) {
-    html,
-    body {
-        height: auto;
-        min-width: 100px;
-    }
-    .main {
-        width: 70%;
-    }
-    .header {
-        width: 70%;
-    }
-    .sidebar {
-        width: 30%;
-    }
-    .main--editor {
-        display: none;
-    }
-    .main--preview {
-        width: 100%;
-    }
-    .header--pageTitle {
-        width: 100%;
-    }
-    .header--actions {
-        display: none;
-    }
-
-    .sidebar .sidebar--pages .sidebar--pages--page {
-        margin-bottom: 20px;
-    }
 }

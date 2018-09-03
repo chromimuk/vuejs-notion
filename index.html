@@ -59,6 +59,7 @@
 
             <div class="header--actions">
                 <span class="header--actions--alert" v-cloak>{{ alertMessage }}</span>
+                <button id="btnSwitchView" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="switchView()">Aperçu</button>
                 <button id="btnSavePage" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="savePage(currentPage)">Sauvegarder</button>
                 <button id="btnPageMenu" v-bind:class="{ hidden: !isLoggedIn }" v-on:click="showPageMenu(currentPage)">...</button>
             </div>

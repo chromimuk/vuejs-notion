@@ -70,7 +70,7 @@ function Notion() {
 
                 // login form
                 email: user.email,
-                password: ''
+                password: '',
             },
 
             firebase: {
@@ -157,11 +157,9 @@ function Notion() {
                         p._id
                     );
                     this.currentPage = page;
-                    // this.editorContent = page._content;
                 },
 
                 updatePreview: _.debounce(function (e) {
-                    // this.editorContent = e.target.value;
                     this.currentPage.content = e.target.value;
                 }, 300),
 
@@ -201,6 +199,10 @@ function Notion() {
 
                 addAlert: function (text) {
                     this.alertMessage = text;
+                },
+
+                switchView: function() {
+                    _RenderingHelper.switchFullView();
                 },
             }
         });

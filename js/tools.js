@@ -37,4 +37,6 @@ class DateHelper {
 
 const Resx = {
     savedAt: 'Sauvegardé à',
+    showEditor: 'Éditeur',
+    showPreview: 'Aperçu',
 }
